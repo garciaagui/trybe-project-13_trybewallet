@@ -1,9 +1,7 @@
 import { SAVE_USER_INFO } from '../actions';
 
 const INITIAL_STATE = {
-  user: {
-    email: '', // string que armazena o email da pessoa usuária
-  },
+  email: '', // string que armazena o email da pessoa usuária
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -11,7 +9,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
   case SAVE_USER_INFO:
     return {
       ...state,
-      ...action.payload,
+      email: action.payload,
     };
   default:
     return state;
