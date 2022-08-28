@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import WalletForm from '../components/WalletForm';
+import Table from '../components/Table';
 
 class Wallet extends React.Component {
   constructor() {
@@ -22,6 +23,7 @@ class Wallet extends React.Component {
         <Header expenses={ expenses } />
         <div>TrybeWallet</div>
         <WalletForm handleAddValue={ this.handleAddValue } />
+        <Table />
       </section>
     );
   }
