@@ -10,13 +10,18 @@ class Wallet extends React.Component {
     };
   }
 
+  handleAddValue = (value) => {
+    const convertedValue = Number(value.toFixed(2));
+    this.setState((prevState) => ({ expenses: prevState.expenses + convertedValue }));
+  };
+
   render() {
     const { expenses } = this.state;
     return (
       <section>
         <Header expenses={ expenses } />
         <div>TrybeWallet</div>
-        <WalletForm />
+        <WalletForm handleAddValue={ this.handleAddValue } />
       </section>
     );
   }
