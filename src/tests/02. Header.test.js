@@ -15,7 +15,7 @@ it('Verifica os elementos do Header', () => {
   expect(currencyField).toBeInTheDocument();
 });
 
-it('Verifica se o valor do campo email é o mesmo do estado global', () => {
+it('Testa se o valor do campo "email" é o mesmo do estado global', () => {
   const initialState = {
     user: {
       email: 'test@test.com',
@@ -28,4 +28,12 @@ it('Verifica se o valor do campo email é o mesmo do estado global', () => {
   const emailField = screen.getByTestId(/email-field/i);
 
   expect(emailField).toHaveTextContent(email);
+});
+
+it('Testa se o valor do campo "currency" é igual a "BRL"', () => {
+  renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
+
+  const currencyField = screen.getByTestId(/header-currency-field/i);
+
+  expect(currencyField).toHaveTextContent('BRL');
 });

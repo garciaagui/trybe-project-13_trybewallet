@@ -19,10 +19,10 @@ class Login extends React.Component {
     this.setState({ [id]: value }, () => {
       const { email, password } = this.state;
       const CHARACTER_LIMIT = 6;
-      const invalidEmail = email.toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/img);
-      const invalidPassword = password.length >= CHARACTER_LIMIT;
+      const validEmail = email.toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/img);
+      const validPassword = password.length >= CHARACTER_LIMIT;
 
-      this.setState({ isLoginBtnDisabled: !(invalidEmail && invalidPassword) });
+      this.setState({ isLoginBtnDisabled: !(validEmail && validPassword) });
     });
   };
 
