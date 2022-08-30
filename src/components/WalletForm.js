@@ -29,12 +29,12 @@ class WalletForm extends Component {
   };
 
   handleAddExpense = async () => {
-    const { dispatch, expenses, exchangeRates, handleAddValue } = this.props;
+    const { dispatch, expenses, exchangeRates, handleTotalField } = this.props;
     const { value, currency } = this.state;
     const id = expenses.length === 0 ? 0 : (expenses[expenses.length - 1].id + 1);
 
     await dispatch(fetchCurrencies());
-    handleAddValue(value * exchangeRates[currency].ask);
+    handleTotalField(Number(value * exchangeRates[currency].ask));
     dispatch(addExpenseAction({ id, ...this.state, exchangeRates }));
 
     this.setState({
@@ -139,7 +139,7 @@ class WalletForm extends Component {
 
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  handleAddValue: PropTypes.func.isRequired,
+  handleTotalField: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.shape({
   })).isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape({

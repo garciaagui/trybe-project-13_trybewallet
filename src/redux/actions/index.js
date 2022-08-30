@@ -4,6 +4,7 @@ export const REQUEST_CURRENCIES = 'REQUEST_CURRENCIES';
 export const GET_CURRENCIES = 'GET_CURRENCIES';
 export const FAILED_REQUEST = 'FAILED_REQUEST';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
 
 export const saveUserInfoAction = (payload) => ({
   type: SAVE_USER_INFO,
@@ -33,6 +34,11 @@ export const addExpenseAction = (payload) => ({
 //   type: FAILED_REQUEST,
 //   payload: error,
 // });
+
+export const deleteExpenseAction = (payload) => ({
+  type: DELETE_EXPENSE,
+  payload,
+});
 
 export const fetchCurrencies = () => (dispatch) => {
   const URL = 'https://economia.awesomeapi.com.br/json/all';

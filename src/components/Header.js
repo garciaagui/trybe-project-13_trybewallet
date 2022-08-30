@@ -12,7 +12,7 @@ class Header extends Component {
           {user.email}
         </span>
         <span data-testid="total-field">
-          {expenses}
+          {Math.abs(expenses).toFixed(2)}
         </span>
         <span data-testid="header-currency-field">
           BRL

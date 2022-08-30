@@ -11,9 +11,9 @@ class Wallet extends React.Component {
     };
   }
 
-  handleAddValue = (value) => {
-    const convertedValue = Number(value.toFixed(2));
-    this.setState((prevState) => ({ expenses: prevState.expenses + convertedValue }));
+  handleTotalField = (value) => {
+    // const convertedValue = Number(value.toFixed(2));
+    this.setState((prevState) => ({ expenses: prevState.expenses + value }));
   };
 
   render() {
@@ -22,8 +22,8 @@ class Wallet extends React.Component {
       <section>
         <Header expenses={ expenses } />
         <div>TrybeWallet</div>
-        <WalletForm handleAddValue={ this.handleAddValue } />
-        <Table />
+        <WalletForm handleTotalField={ this.handleTotalField } />
+        <Table handleTotalField={ this.handleTotalField } />
       </section>
     );
   }

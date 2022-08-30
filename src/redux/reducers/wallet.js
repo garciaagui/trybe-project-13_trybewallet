@@ -3,6 +3,7 @@ import {
   REQUEST_CURRENCIES,
   GET_CURRENCIES,
   ADD_EXPENSE,
+  DELETE_EXPENSE,
   // FAILED_REQUEST,
 } from '../actions';
 
@@ -40,6 +41,11 @@ const walletReducer = (state = INITIAL_STATE, action) => {
   //   return {
   //     ...state,
   //   };
+  case DELETE_EXPENSE:
+    return {
+      ...state,
+      expenses: state.expenses.filter((expense) => expense.id !== action.payload),
+    };
   default:
     return state;
   }
