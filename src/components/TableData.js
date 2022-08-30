@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class TableData extends Component {
   render() {
-    const { expense, handleDeleteExpense } = this.props;
+    const { expense, handleDeleteExpense, handleExpenseEdition } = this.props;
     const { id, description, tag, method, value, currency, exchangeRates } = expense;
     const exchange = exchangeRates[currency].ask;
     return (
@@ -26,7 +26,13 @@ class TableData extends Component {
           >
             Excluir
           </button>
-
+          <button
+            type="button"
+            data-testid="edit-btn"
+            onClick={ () => handleExpenseEdition(id) }
+          >
+            Editar despesa
+          </button>
         </td>
       </tr>
     );
@@ -45,6 +51,7 @@ TableData.propTypes = {
     }).isRequired,
   }).isRequired,
   handleDeleteExpense: PropTypes.func.isRequired,
+  handleExpenseEdition: PropTypes.func.isRequired,
 };
 
 export default TableData;

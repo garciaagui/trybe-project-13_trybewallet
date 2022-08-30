@@ -1,9 +1,10 @@
 import {
-  // SAVE_WALLET_INFO,
   REQUEST_CURRENCIES,
   GET_CURRENCIES,
   ADD_EXPENSE,
   DELETE_EXPENSE,
+  EDIT_EXPENSE,
+  APPLY_EDITION,
   // FAILED_REQUEST,
 } from '../actions';
 
@@ -17,11 +18,6 @@ const INITIAL_STATE = {
 
 const walletReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  // case SAVE_WALLET_INFO:
-  //   return {
-  //     ...state,
-  //     ...action.payload,
-  //   };
   case REQUEST_CURRENCIES:
     return {
       ...state,
@@ -45,6 +41,22 @@ const walletReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       expenses: state.expenses.filter((expense) => expense.id !== action.payload),
+    };
+  case EDIT_EXPENSE:
+    return {
+      ...state,
+      editor: true,
+      idToEdit: action.payload,
+    };
+  case APPLY_EDITION:
+    return {
+      ...state,
+      editor: false,
+      expenses: state.expenses.reduce((acc, curr) => {
+        if (curr.id === action.payload.id) acc.push(action.payload);
+        else acc.push(curr);
+        return acc;
+      }, []),
     };
   default:
     return state;

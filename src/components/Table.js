@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TableData from './TableData';
-import { deleteExpenseAction } from '../redux/actions';
+import { deleteExpenseAction, editExpenseAction } from '../redux/actions';
 
 class Table extends Component {
   handleDeleteExpense = (id, value) => {
@@ -10,6 +10,11 @@ class Table extends Component {
     const NEGATIVE = -1;
     handleTotalField(Number(value) * NEGATIVE);
     dispatch(deleteExpenseAction(id));
+  };
+
+  handleExpenseEdition = (id) => {
+    const { dispatch } = this.props;
+    dispatch(editExpenseAction(id));
   };
 
   render() {
@@ -35,6 +40,7 @@ class Table extends Component {
               key={ expense.id }
               expense={ expense }
               handleDeleteExpense={ this.handleDeleteExpense }
+              handleExpenseEdition={ this.handleExpenseEdition }
             />
           )) : ''}
         </tbody>

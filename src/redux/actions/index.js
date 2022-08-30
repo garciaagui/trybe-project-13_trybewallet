@@ -1,20 +1,16 @@
 export const SAVE_USER_INFO = 'SAVE_USER_INFO';
-export const SAVE_WALLET_INFO = 'SAVE_WALLET_INFO';
 export const REQUEST_CURRENCIES = 'REQUEST_CURRENCIES';
 export const GET_CURRENCIES = 'GET_CURRENCIES';
 export const FAILED_REQUEST = 'FAILED_REQUEST';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
+export const APPLY_EDITION = 'APPLY_EDITION';
 
 export const saveUserInfoAction = (payload) => ({
   type: SAVE_USER_INFO,
   payload,
 });
-
-// export const saveWalletInfoAction = (payload) => ({
-//   type: SAVE_WALLET_INFO,
-//   payload,
-// });
 
 export const requestCurrenciesAction = () => ({
   type: REQUEST_CURRENCIES,
@@ -37,6 +33,16 @@ export const addExpenseAction = (payload) => ({
 
 export const deleteExpenseAction = (payload) => ({
   type: DELETE_EXPENSE,
+  payload,
+});
+
+export const editExpenseAction = (payload) => ({
+  type: EDIT_EXPENSE,
+  payload,
+});
+
+export const applyEditionAction = (payload) => ({
+  type: APPLY_EDITION,
   payload,
 });
 

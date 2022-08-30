@@ -36,7 +36,7 @@ it('Verifica a alimentação da tabela por meio do estado', () => {
     exchangeRates[currency].name,
     Number(exchangeRates[currency].ask).toFixed(2),
     Number(value * exchangeRates[currency].ask).toFixed(2),
-    'Real', ''];
+    /Real/i, /ExcluirEditar despesa/i];
 
   expect(dataCells).toHaveLength(9);
   dataCells.forEach((cell, index) => {
