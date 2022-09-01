@@ -34,8 +34,8 @@ class Table extends Component {
             <th>Editar/Excluir</th>
           </tr>
         </thead>
-        <tbody>
-          {expenses ? expenses.map((expense) => (
+        <tbody data-testid="table-data">
+          {expenses.length ? expenses.map((expense) => (
             <TableData
               key={ expense.id }
               expense={ expense }

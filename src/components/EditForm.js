@@ -21,7 +21,6 @@ class EditForm extends Component {
   componentDidMount() {
     const { expenseToEdit } = this.props;
     const { value, description, currency, method, tag } = expenseToEdit;
-    console.log(expenseToEdit);
     this.setState({
       value,
       description,
@@ -150,8 +149,9 @@ class EditForm extends Component {
 EditForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   handleTotalField: PropTypes.func.isRequired,
-  currencies: PropTypes.arrayOf(PropTypes.shape({
-  })).isRequired,
+  currencies: PropTypes.arrayOf(
+    PropTypes.string.isRequired,
+  ).isRequired,
   exchangeRates: PropTypes.shape({
   }).isRequired,
   expenseToEdit: PropTypes.shape({

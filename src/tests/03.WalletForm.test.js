@@ -1,119 +1,84 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWith';
 import mockData from './helpers/mockData';
 
-it('Verifica os elementos de WalletForm', () => {
+it('Should have 02 inputs, 03 selects and 01 button', async () => {
   jest.spyOn(global, 'fetch');
   global.fetch.mockResolvedValue({
     json: jest.fn().mockResolvedValue(mockData),
   });
 
-  delete mockData.USDT;
+  renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
 
-  const initialState = {
-    wallet: {
-      expenses: [],
-      currencies: Object.keys(mockData),
-      exchangeRates: mockData,
-    },
-  };
-
-  renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-
-  const valueInput = screen.getByTestId(/value-input/i);
-  const descriptionInput = screen.getByTestId(/description-input/i);
-  const currencySelect = screen.getByTestId(/currency-input/i);
-  const currencyOptions = screen.getAllByTestId(/option-currency/i);
-  const methodSelect = screen.getByTestId(/method-input/i);
-  const methodOptions = screen.getAllByTestId(/option-method/i);
-  const tagSelect = screen.getByTestId(/tag-input/i);
-  const tagOptions = screen.getAllByTestId(/option-tag/i);
-  const addButton = screen.getByRole('button', { name: /Adicionar despesa/i });
-
-  expect(valueInput).toBeInTheDocument();
-  expect(descriptionInput).toBeInTheDocument();
-  expect(currencySelect).toBeInTheDocument();
-  expect(currencyOptions).toHaveLength(15);
-  expect(methodSelect).toBeInTheDocument();
-  expect(methodOptions).toHaveLength(3);
-  expect(tagSelect).toBeInTheDocument();
-  expect(tagOptions).toHaveLength(5);
-  expect(addButton).toBeInTheDocument();
+  expect(screen.getByTestId(/value-input/i)).toBeInTheDocument();
+  expect(screen.getByTestId(/description-input/i)).toBeInTheDocument();
+  expect(screen.getByTestId(/currency-input/i)).toBeInTheDocument();
+  expect(await screen.findAllByTestId(/option-currency/i)).toHaveLength(15);
+  expect(screen.getByTestId(/method-input/i)).toBeInTheDocument();
+  expect(screen.getAllByTestId(/option-method/i)).toHaveLength(3);
+  expect(screen.getByTestId(/tag-input/i)).toBeInTheDocument();
+  expect(screen.getAllByTestId(/option-tag/i)).toHaveLength(5);
+  expect(screen.getByRole('button', { name: /Adicionar despesa/i })).toBeInTheDocument();
 });
 
-it('Testa a chamada da API', () => {
+it('Tests API call', () => {
   jest.spyOn(global, 'fetch');
   global.fetch.mockResolvedValue({
     json: jest.fn().mockResolvedValue(mockData),
   });
 
-  delete mockData.USDT;
-
-  const initialState = {
-    wallet: {
-      expenses: [],
-      currencies: Object.keys(mockData),
-      exchangeRates: mockData,
-    },
-  };
-
-  renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
+  renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
 
   expect(global.fetch).toBeCalledTimes(1);
   expect(global.fetch).toBeCalledWith('https://economia.awesomeapi.com.br/json/all');
 });
 
-// it('Testa se o estado global "currencies" ao entrar na tela', () => {
-//   const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/'] });
+it('Tests "expenses" state update when an expense is added and deleted', async () => {
+  jest.spyOn(global, 'fetch');
+  global.fetch.mockResolvedValue({
+    json: jest.fn().mockResolvedValue(mockData),
+  });
 
-//   const inputEmail = screen.getByTestId(/email-input/i);
-//   const inputPassword = screen.getByTestId(/password-input/i);
-//   const submitButton = screen.getByRole('button', { name: /Entrar/i });
+  const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
+  const valueInput = screen.getByTestId(/value-input/i);
+  const descriptionInput = screen.getByTestId(/description-input/i);
+  const currencySelect = await screen.findByTestId(/currency-input/i);
+  const methodSelect = screen.getByTestId(/method-input/i);
+  const tagSelect = screen.getByTestId(/tag-input/i);
+  const addButton = screen.getByRole('button', { name: /Adicionar despesa/i });
 
-//   userEvent.type(inputEmail, 'test@test.com');
-//   userEvent.type(inputPassword, 'xxxxxx');
-//   userEvent.click(submitButton);
+  expect(store.getState().wallet.expenses).toHaveLength(0);
 
-//   const { wallet: { currencies } } = store.getState();
+  userEvent.type(valueInput, '50');
+  userEvent.type(descriptionInput, 'Cinema');
+  userEvent.selectOptions(currencySelect, ['EUR']);
+  userEvent.selectOptions(methodSelect, ['Cartão de crédito']);
+  userEvent.selectOptions(tagSelect, ['Lazer']);
+  userEvent.click(addButton);
 
-//   expect(currencies).toBe('xxxxxxxxxx');
-// });
+  await waitFor(() => {});
+  const stateAfterOneAdition = store.getState().wallet.expenses;
+  expect(stateAfterOneAdition).toHaveLength(1);
+  expect(stateAfterOneAdition[0].id).toBe(0);
 
-// it('Testa se "expenses" é atualizado ao adicionar uma despesa', async () => {
-//   jest.spyOn(global, 'fetch');
-//   global.fetch.mockResolvedValue({
-//     json: jest.fn().mockResolvedValue(mockData),
-//   });
+  userEvent.type(valueInput, '20');
+  userEvent.type(descriptionInput, 'Uber');
+  userEvent.selectOptions(currencySelect, ['DOGE']);
+  userEvent.selectOptions(methodSelect, ['Dinheiro']);
+  userEvent.selectOptions(tagSelect, ['Transporte']);
+  userEvent.click(addButton);
 
-//   delete mockData.USDT;
+  await waitFor(() => {});
+  const stateAfterTwoAditions = store.getState().wallet.expenses;
+  expect(stateAfterTwoAditions).toHaveLength(2);
+  expect(stateAfterTwoAditions[1].id).toBe(1);
 
-//   const initialState = {
-//     wallet: {
-//       expenses: [],
-//       currencies: Object.keys(mockData),
-//       exchangeRates: mockData,
-//     },
-//   };
+  userEvent.click(screen.getAllByRole('button', { name: /Excluir/i })[0]);
 
-//   const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState });
-
-//   const valueInput = screen.getByTestId(/value-input/i);
-//   const descriptionInput = screen.getByTestId(/description-input/i);
-//   const currencySelect = screen.getByTestId(/currency-input/i);
-//   const methodSelect = screen.getByTestId(/method-input/i);
-//   const tagSelect = screen.getByTestId(/tag-input/i);
-//   const addButton = screen.getByRole('button', { name: /Adicionar despesa/i });
-
-//   userEvent.type(valueInput, '50');
-//   userEvent.type(descriptionInput, 'Cinema');
-//   userEvent.selectOptions(currencySelect, ['EUR']);
-//   userEvent.selectOptions(methodSelect, ['Cartão de crédito']);
-//   userEvent.selectOptions(tagSelect, ['Lazer']);
-//   userEvent.click(addButton);
-
-//   const { wallet } = store.getState();
-//   console.log(wallet);
-// });
+  const stateAfterOneDeletion = store.getState().wallet.expenses;
+  expect(stateAfterOneDeletion).toHaveLength(1);
+});

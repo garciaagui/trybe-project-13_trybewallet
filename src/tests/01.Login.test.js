@@ -1,70 +1,57 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWith';
 
 const defaultEmail = 'test@test.com';
 const defaultPassword = 'xxxxxx';
 
-it('Verifica os elementos de formulário', () => {
+it('Should have 02 inputs and 01 button', () => {
   renderWithRouterAndRedux(<App />, { initialEntries: ['/'] });
 
-  const inputEmail = screen.getByTestId(/email-input/i);
-  const inputPassword = screen.getByTestId(/password-input/i);
-  const submitButton = screen.getByRole('button', { name: /Entrar/i });
-
-  expect(inputEmail).toBeInTheDocument();
-  expect(inputPassword).toBeInTheDocument();
-  expect(submitButton).toBeInTheDocument();
+  expect(screen.getByTestId(/email-input/i)).toBeInTheDocument();
+  expect(screen.getByTestId(/password-input/i)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Entrar/i })).toBeInTheDocument();
 });
 
-it('Testa a lógica de invalidação do botão de Submit', () => {
+it('Tests the submit button validation logic', () => {
   renderWithRouterAndRedux(<App />, { initialEntries: ['/'] });
 
-  const inputEmail = screen.getByTestId(/email-input/i);
-  const inputPassword = screen.getByTestId(/password-input/i);
+  const emailInput = screen.getByTestId(/email-input/i);
+  const passwordInput = screen.getByTestId(/password-input/i);
   const submitButton = screen.getByRole('button', { name: /Entrar/i });
 
-  userEvent.type(inputEmail, 'test');
-  userEvent.type(inputPassword, 'xxx');
+  userEvent.type(emailInput, 'test');
+  userEvent.type(passwordInput, 'xxx');
   expect(submitButton.disabled).toBeTruthy();
 
-  userEvent.type(inputEmail, defaultEmail);
+  userEvent.type(emailInput, defaultEmail);
   expect(submitButton.disabled).toBeTruthy();
 
-  userEvent.type(inputPassword, defaultPassword);
+  userEvent.type(passwordInput, defaultPassword);
   expect(submitButton.disabled).toBeFalsy();
 });
 
-it('Testa se a tela é redirecionada para "/carteira"', () => {
+it('Tests page redirect to "/wallet" after clicking submit button', () => {
   const { history } = renderWithRouterAndRedux(<App />, { initialEntries: ['/'] });
 
-  const inputEmail = screen.getByTestId(/email-input/i);
-  const inputPassword = screen.getByTestId(/password-input/i);
-  const submitButton = screen.getByRole('button', { name: /Entrar/i });
-
-  userEvent.type(inputEmail, defaultEmail);
-  userEvent.type(inputPassword, defaultPassword);
-  userEvent.click(submitButton);
+  userEvent.type(screen.getByTestId(/email-input/i), defaultEmail);
+  userEvent.type(screen.getByTestId(/password-input/i), defaultPassword);
+  userEvent.click(screen.getByRole('button', { name: /Entrar/i }));
 
   const { pathname } = history.location;
   expect(pathname).toBe('/carteira');
 });
 
-it('Testa se o estado global "email" é atualizado ao redirecionar', () => {
+it('Tests "email" state update when the page is redirected', () => {
   const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/'] });
 
-  const inputEmail = screen.getByTestId(/email-input/i);
-  const inputPassword = screen.getByTestId(/password-input/i);
-  const submitButton = screen.getByRole('button', { name: /Entrar/i });
+  userEvent.type(screen.getByTestId(/email-input/i), defaultEmail);
+  userEvent.type(screen.getByTestId(/password-input/i), defaultPassword);
+  expect(store.getState().user.email).toBe('');
 
-  userEvent.type(inputEmail, defaultEmail);
-  userEvent.type(inputPassword, defaultPassword);
-  userEvent.click(submitButton);
-
-  const { user: { email } } = store.getState();
-  const expected = defaultEmail;
-
-  expect(email).toBe(expected);
+  userEvent.click(screen.getByRole('button', { name: /Entrar/i }));
+  expect(store.getState().user.email).toBe(defaultEmail);
 });

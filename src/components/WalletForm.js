@@ -140,8 +140,9 @@ class WalletForm extends Component {
 WalletForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   handleTotalField: PropTypes.func.isRequired,
-  currencies: PropTypes.arrayOf(PropTypes.shape({
-  })).isRequired,
+  currencies: PropTypes.arrayOf(
+    PropTypes.string.isRequired,
+  ).isRequired,
   expenses: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
   })).isRequired,
